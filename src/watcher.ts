@@ -1,5 +1,6 @@
 import { MVVM } from './mvvm';
 import { Dep } from './dep';
+import { error } from './util/log';
 
 export class Watcher {
 
@@ -41,7 +42,7 @@ export class Watcher {
 
     parseGetter(exp: string): (data: any) => any {
         if(/[^\w.$]/.test(exp)) {
-            throw new Error('data key cannot to sepcial characters beginning')
+            error('data key cannot to sepcial characters beginning');
         }
         const exps = exp.split('.');
         return (obj: any) => {
