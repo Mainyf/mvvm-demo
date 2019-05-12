@@ -1,11 +1,15 @@
-const gulp = require("gulp"),
+const
+    gulp = require("gulp"),
+    exec = require('child_process').exec,
     webpack = require("webpack-stream"),
+    ts = require('gulp-typescript'),
     named = require("vinyl-named"),
     browserSync = require("browser-sync").create(),
     del = require("del"),
     moduleName = "demo",
     webpackConfig = require("./webpack.config")(moduleName),
     output = "./dist",
+    declarationDir = "./types",
     srcFolder = "./src";
 
 function clean() {
@@ -49,9 +53,23 @@ function start() {
     }));
 }
 
+const generateDtsTsConfig = ts.createProject('tsconfig.json', {
+    watch: false,
+    declaration: true,
+});
+
+function generateDts() {
+    del(declarationDir);
+    const result = gulp.src(`${srcFolder}/**/*.ts`)
+        .pipe(generateDtsTsConfig());
+    return result.dts
+        .pipe(gulp.dest(declarationDir));
+}
+
 exports.clean = clean;
 
-exports.build = gulp.series(clean, _build);
+exports.generateDts = generateDts;
+
+exports.build = gulp.series(generateDts, clean, _build);
 
 exports.start = gulp.series(clean, script, start);
-
