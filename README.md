@@ -1,13 +1,13 @@
-# JavaScript Module Starter
+# MVVM Demo
 
 ----
 
 ## Quick start
 
 ```
-git clone https://github.com/Mainyf/javascript-module-starter
+git clone https://github.com/Mainyf/mvvm-demo
 
-cd javascript-module-starter
+cd mvvm-demo
 
 npm i(yarn)
 
