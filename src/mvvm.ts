@@ -1,17 +1,19 @@
-import { observer } from './observer';
+import { observer } from './observer/observer';
+import { Compile } from './compile/compile';
 
 export class MVVM {
-    
-    private $options: any;
+
+    private $compile: Compile;
     private _data: any = Object.create({});
 
     constructor(options: any) {
-        this.$options = options;
-        const data = this._data = this.$options.data;
+        this._data = options.data;
 
-        Object.keys(data).forEach((key) => this._proxyData(key));
+        Object.keys(this._data).forEach((key) => this._proxyData(key));
 
-        observer(data);
+        observer(this._data);
+
+        this.$compile = new Compile(options.el || document.body, this);
     }
 
     _proxyData(key: string, setter?: Function, getter?: Function) {

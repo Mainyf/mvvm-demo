@@ -16,6 +16,7 @@ module.exports = (name) => {
                 '@src': appSrc
             }
         },
+        devtool: 'eval-source-map',
         output: {
             libraryExport: 'default',
             libraryTarget: 'umd',

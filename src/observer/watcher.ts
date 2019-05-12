@@ -1,20 +1,24 @@
-import { MVVM } from './mvvm';
+import { MVVM } from '../mvvm';
 import { Dep } from './dep';
-import { error } from './util/log';
+import { error } from '../util/log';
 
 export class Watcher {
 
     private vm: MVVM;
-    private cb: Function;
+    private cb: (newVal: any, oldVal: any) => void;
     private depIds: Object = {};
     private getter: (data: any) => any;
     private value: any;
 
-    constructor(vm: MVVM, expOrFn: ((data: any) => any) | string, cb: Function) {
+    constructor(vm: MVVM, expOrFn: ((data: any) => any) | string, cb: (newVal: any, oldVal: any) => void) {
         this.vm = vm;
         this.cb = cb;
         this.getter = typeof expOrFn === 'function' ? expOrFn : this.parseGetter(expOrFn.trim());
         this.value = this.get();
+    }
+
+    update() {
+        this.run();
     }
 
     run() {

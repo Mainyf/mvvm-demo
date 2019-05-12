@@ -8,6 +8,21 @@
 </head>
 <body>
     
+    <div id="root">
+
+        <div>
+            {{ demo }}
+        </div>
+
+    </div>
     <script src="./dist/index.js"></script>
+    <script>
+        var vm = new MVVM({
+            el: '#root',
+            data: {
+                demo: 'dssdasd'
+            }
+        })
+    </script>
 </body>
 </html>

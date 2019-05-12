@@ -1,5 +1,3 @@
 import { MVVM } from './mvvm';
 
-export {
-    MVVM
-};
+export default MVVM;
