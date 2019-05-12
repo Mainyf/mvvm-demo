@@ -4,6 +4,7 @@ import { error } from '../util/log';
 import Updater from './updater';
 import { Watcher } from '@src/observer/watcher';
 import { get, set } from '@src/util/objectUtil';
+import { matchMult } from '@src/util/regexp';
 
 export class Compile {
 
@@ -32,21 +33,22 @@ export class Compile {
 
             this._handleText(node);
 
-            if(node.childNodes && node.childNodes.length) {
+            if (node.childNodes && node.childNodes.length) {
                 this._compileElement(node);
             }
         });
     }
 
     private _handleText(node: Element) {
-        const text = node.textContent;
-        const reg = /\{\{(.*)\}\}/;
-
-        const result = reg.exec(text);
-        if(isTextNode(node) && result && result.length >= 2) {
-            this._compileText(node as any, result[1].trim());
+        if(!isTextNode(node)) {
             return;
         }
+        const text = node.textContent;
+        const reg = /\s\S*\{\{(.*)\}\}\s\S*/gm;
+
+        matchMult(reg, text).forEach((v) => {
+            this._compileText(node as any, v.trim());
+        });
     }
 
     private _compileText(node: Text, exp: string) {
@@ -55,7 +57,7 @@ export class Compile {
 
     private _bind(node: Element | Text, vm: MVVM, exp: string, dir: string) {
         const updaterFn = Updater[dir + 'Updater']
-        if(updaterFn) {
+        if (updaterFn) {
             updaterFn(node, this._getVMVal(vm, exp));
         }
         new Watcher(vm, exp, (newVal, oldVal) => {

@@ -9,14 +9,14 @@ export class MVVM {
     constructor(options: any) {
         this._data = options.data;
 
-        Object.keys(this._data).forEach((key) => this._proxyData(key));
+        Object.keys(this._data).forEach((key) => this._forwardThisToData(key));
 
         observer(this._data);
 
         this.$compile = new Compile(options.el || document.body, this);
     }
 
-    _proxyData(key: string, setter?: Function, getter?: Function) {
+    _forwardThisToData(key: string) {
         Object.defineProperty(this, key, {
             configurable: false,
             enumerable: true,

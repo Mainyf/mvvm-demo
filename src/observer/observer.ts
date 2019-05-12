@@ -10,28 +10,27 @@ class Observer {
     }
 
     attackProxy(data: any) {
-        Object.keys(data).forEach((key) => {
-            this.defineReactive(this.data, key, data[key]);
-        });
+        Object.keys(data).forEach((key) => this.defineReactive(this.data, key, data[key]));
     }
 
     defineReactive(data: any, key: string, val: any) {
         const dep = new Dep();
-        let childObj = observer(val);
+
+        observer(val);
 
         Object.defineProperty(data, key, {
             enumerable: true,
             configurable: false,
-            get() {
-                if(Dep.target) {
+            get: () => {
+                if (Dep.target) {
                     dep.depend();
                 }
                 return val;
             },
-            set(newVal: any) {
-                if(newVal !== val) {
+            set: (newVal: any) => {
+                if (newVal !== val) {
                     val = newVal;
-                    childObj = observer(val);
+                    observer(val);
                     dep.notify();
                 }
             }
@@ -42,7 +41,7 @@ class Observer {
 
 
 export function observer(data: any): Observer | undefined {
-    if(data && typeof data === 'object') {
+    if (data && typeof data === 'object') {
         return new Observer(data);
     }
 }

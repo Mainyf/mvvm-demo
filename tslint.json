@@ -8,7 +8,7 @@
         "no-empty-interface": true,
         "await-promise": true,
         "curly": true,
-        "forin": true,
+        // "forin": true,
         "no-arg": true,
         "no-conditional-assignment": true,
         "no-debugger": true,

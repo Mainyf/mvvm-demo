@@ -1,6 +1,7 @@
 import { MVVM } from '../mvvm';
 import { Dep } from './dep';
 import { error } from '../util/log';
+import { get } from '@src/util/objectUtil';
 
 export class Watcher {
 
@@ -24,40 +25,31 @@ export class Watcher {
     run() {
         const newVal = this.get();
         const oldVal = this.value;
-        if(newVal !== oldVal) {
+        if (newVal !== oldVal) {
             this.value = newVal;
             this.cb.call(this.vm, newVal, oldVal);
         }
     }
 
     addDep(dep: Dep) {
-        if(!this.depIds.hasOwnProperty(dep.id)) {
+        if (!this.depIds.hasOwnProperty(dep.id)) {
             dep.addSub(this);
             this.depIds[dep.id] = dep;
         }
     }
-    
+
     get() {
         Dep.target = this;
-        const value = this.getter.call(this.vm, this.vm);
+        const value = this.getter.call(null, this.vm);
         Dep.target = null;
         return value;
     }
 
     parseGetter(exp: string): (data: any) => any {
-        if(/[^\w.$]/.test(exp)) {
+        if (/[^\w.$]/.test(exp)) {
             error('data key cannot to sepcial characters beginning');
         }
-        const exps = exp.split('.');
-        return (obj: any) => {
-            for(let i = 0, len = exps.length;i < len;i++) {
-                if(!obj) {
-                    return;
-                }
-                obj = obj[exps[i]];
-            }
-            return obj;
-        }
+        return (obj: any) => get(obj, exp);
     }
 
 }
