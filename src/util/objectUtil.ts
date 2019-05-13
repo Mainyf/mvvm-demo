@@ -1,3 +1,4 @@
+
 export function get<T>(object: any, path: string | any[], defaultValue?: T): T {
     return convertArrayToPath(path).reduce((prev, value) => (prev || {})[value], object) || defaultValue;
 }
@@ -22,22 +23,14 @@ export function set(object: any, path: string | any[], value: any) {
 
 const _toString = Object.prototype.toString;
 
-export function getRawType(obj: any): string {
-    return (_toString.call(obj) as string).slice(8, -1);
+export function getRawType(value: any): string {
+    // tslint:disable-next-line: triple-equals
+    if (value == null) {
+        return value === undefined ? 'Undefined' : 'Null'
+    }
+    return (_toString.call(value) as string).slice(8, -1);
 }
 
 export function isObject(obj: any): boolean {
     return getRawType(obj) === 'Object';
-}
-
-export function cloneDeep<T = any>(obj: T): T {
-    if(typeof obj !== 'object') {
-        throw new Error('obj not object');
-    }
-    let isArray = Array.isArray(obj);
-    let result: any = isArray ? [] : {};
-    for(let key in obj) {
-        result[key] = isObject(obj[key]) ? cloneDeep(obj[key]) : obj[key];
-    }
-    return result;
 }

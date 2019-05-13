@@ -7,11 +7,11 @@ export class MVVM {
     private _data: any = Object.create({});
 
     constructor(options: any) {
-        this._data = options.data;
+        const data = this._data = options.data;
 
-        Object.keys(this._data).forEach((key) => this._forwardThisToData(key));
+        Object.keys(data).forEach((key) => this._forwardThisToData(key));
 
-        observer(this._data);
+        observer(data);
 
         this.$compile = new Compile(options.el || document.body, this);
     }
